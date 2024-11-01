@@ -1,0 +1,67 @@
+networks:
+  inception-network:
+    driver: bridge
+
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/tsuchen/data/wordpress_data
+      o: bind
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/tsuchen/data/mariadb_data
+      o: bind
+
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    init: true
+    ports:
+      - "443:443"
+    networks:
+      - inception-network
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - wordpress
+    restart: unless-stopped
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    init: true
+    env_file:
+      - .env
+    networks:
+      - inception-network
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    init: true
+    env_file:
+      - .env
+    networks:
+      - inception-network
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: unless-stopped
+  
+## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
+## since the services used in this project don't spawn children processes and even has process management capability, we don't need to add init:true here.
