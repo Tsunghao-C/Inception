@@ -39,9 +39,9 @@ wp config set WP_CACHE true --raw --allow-root
 
 wp config set WP_DEBUG true --raw --allow-root
 
-# wp config set WP_REDIS_HOST redis --allow-root
+wp config set WP_REDIS_HOST redis --allow-root
 
-# wp config set WP_REDIS_PORT 6379 --allow-root
+wp config set WP_REDIS_PORT 6379 --allow-root
 
 
 # Wait until mariadb is set
@@ -58,9 +58,10 @@ wp core install --url="${WP_SITE_URL}" --title="${WP_SITE_TITLE}" \
 wp theme install twentytwentythree --activate --allow-root
 # wp theme install pixl --activate --allow-root
 
-# wp plugin install redis-cache --activate --allow-root
+# Bonus Adding redis and use RAM for frequently requested contents
+wp plugin install redis-cache --activate --allow-root
 
-# wp redis enable --allow-root
+wp redis enable --allow-root
 
 if ! wp user get "${WP_USER_USERNAME}" --allow-root > /dev/null 2>&1; then
 	wp user create "${WP_USER_USERNAME}" "${WP_USER_EMAIL}" --user_pass="${WP_USER_PASSWORD}" --role=subscriber --allow-root

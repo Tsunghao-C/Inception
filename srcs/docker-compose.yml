@@ -31,6 +31,7 @@ services:
       - wordpress_data:/var/www/html
     depends_on:
       - wordpress
+    pull_policy: never
     restart: unless-stopped
 
   wordpress:
@@ -47,6 +48,8 @@ services:
       - wordpress_data:/var/www/html
     depends_on:
       - mariadb
+      - redis
+    pull_policy: never
     restart: unless-stopped
 
   mariadb:
@@ -61,7 +64,40 @@ services:
       - inception-network
     volumes:
       - mariadb_data:/var/lib/mysql
+    pull_policy: never
     restart: unless-stopped
+  
+  redis:
+    container_name: redis
+    build:
+      context: ./requirements/bonus/redis
+      dockerfile: Dockerfile
+    init: true
+    env_file:
+      - .env
+    networks:
+      - inception-network
+    pull_policy: never
+    restart: unless-stopped
+  
+  ftp-server:
+    container_name: ftp-server
+    build:
+      context: ./requirements/bonus/ftp_server
+      dockerfile: Dockerfile
+    init: true
+    env_file:
+      - .env
+    networks:
+      - inception-network
+    volumes:
+      - wordpress_data:/var/www/html
+    ports:
+      - "20-21:20-21"
+      - "30000-30100:30000-30100"
+    pull_policy: never
+    restart: unless-stopped
+
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
 ## since the services used in this project don't spawn children processes and even has process management capability, we don't need to add init:true here.

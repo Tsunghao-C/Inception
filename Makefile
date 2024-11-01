@@ -1,6 +1,8 @@
 all : up
 
 up :
+	mkdir -p ${HOME}/data/mariadb_data
+	mkdir -p ${HOME}/data/wordpress_data
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
@@ -14,3 +16,7 @@ start:
 
 status:
 	@docker compose -f ./srcs/docker-compose.yml ps
+
+clean: down
+	sudo rm -rf ${HOME}/data/mariadb_data
+	sudo rm -rf ${HOME}/data/wordpress_data
