@@ -1,21 +1,27 @@
 #!/bin/bash
 
-if [ ! -f "/etc/vsftpd/vsftpd.conf.bak" ]; then
+if [ ! -f "/etc/vsftpd.conf.bak" ]; then
 
+    # create repo for secure chroot
+    mkdir -p /var/run/vsftpd/empty
+    # create repo for local root
     mkdir -p /var/www/html
 
-    cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
-    mv /tmp/vsftpd.conf /etc/vsftpd/vsftpd.conf
+
+    cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
+    mv /tmp/vsftpd.conf /etc/vsftpd.conf
 
     # Add FTP_USER, change password and declare owner of wordpress folder
-    adduser $FTP_USER --disabled-password
-    echo "$FTP_USER:$FTP_PWD" | /usr/sbin/chpasswd &> /dev/null
-    chown -R $FTP_USER:$FTP_USER /var/www/html
+    adduser --disabled-password --gecos "" "$FTP_USER"
+    echo "$FTP_USER:$FTP_PWD" | chpasswd
+    chown -R "$FTP_USER:$FTP_USER" /var/www/html
+    chmod 755 /var/www/html
 
-    echo $FTP_USER | tee -a /etc/vsftpd.userlist &> /dev/null
+    # Add the user to the vsftpd user list
+    echo "$FTP_USER" | tee -a /etc/vsftpd.userlist > /dev/null
 
 fi
 
-echo "FTP started on :21"
+echo "FTP server starting on port 21"
 
 exec "$@"

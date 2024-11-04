@@ -1,7 +1,8 @@
-FROM alpine:3.13
+FROM debian:bullseye
 
-RUN apk update && apk upgrade && apk add --no-cache \
-    vsftpd
+RUN apt-get update && \
+    apt-get install -y vsftpd && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY conf/vsftpd.conf /tmp/vsftpd.conf
 
@@ -11,4 +12,4 @@ RUN chmod +x /tmp/startup.sh
 
 ENTRYPOINT [ "/tmp/startup.sh" ]
 
-CMD [ "/usr/sbin/vsftpd", "/etc/vsftpd/vsftpd.conf" ]
+CMD [ "/usr/sbin/vsftpd", "/etc/vsftpd.conf" ]
