@@ -13,12 +13,12 @@ RUN mkdir -p /var/www/html/static
 
 COPY ./tools/static_web_pages /static_web_pages
 # COPY ./tools/static_web_pages/. /var/www/html/static
-COPY ./tools/startup.sh /usr/bin/startup.sh
+COPY ./tools/startup.sh /usr/local/bin/startup.sh
 
-RUN chmod +x /usr/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
 
 WORKDIR /var/www/html/static
 
-ENTRYPOINT [ "/usr/bin/startup.sh" ]
+ENTRYPOINT [ "/usr/local/bin/startup.sh" ]
 
 CMD ["npm", "run", "build"]
