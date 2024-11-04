@@ -1,0 +1,12 @@
+{
+    "name": "static-website",
+    "version": "1.0.0",
+    "description": "A simple static website",
+    "main": "index.js",
+    "scripts": {
+        "build": "echo 'Building the static site...'",
+        "start": "echo 'Starting the static site...'"
+    },
+    "author": "tsuchen",
+    "license": "ISC"
+}

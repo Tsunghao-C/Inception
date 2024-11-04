@@ -31,6 +31,7 @@ services:
       - wordpress_data:/var/www/html
     depends_on:
       - wordpress
+      - static-website
     pull_policy: never
     restart: unless-stopped
 
@@ -97,6 +98,19 @@ services:
       - "30000-30100:30000-30100"
     pull_policy: never
     restart: unless-stopped
+
+  static-website:
+    container_name: static-website
+    build:
+      context: ./requirements/bonus/static_website
+      dockerfile: Dockerfile
+    init: true
+    networks:
+      - inception-network
+    volumes:
+      - wordpress_data:/var/www/html
+    pull_policy: never
+    restart: on-failure:2
 
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
