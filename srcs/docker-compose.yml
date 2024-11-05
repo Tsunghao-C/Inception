@@ -141,6 +141,7 @@ services:
     build:
       context: ./requirements/bonus/prometheus
       dockerfile: Dockerfile
+    init: true
     networks:
       - inception-network
     depends_on:
@@ -158,6 +159,7 @@ services:
     build:
       context: ./requirements/bonus/grafana
       dockerfile: Dockerfile
+    init: true
     networks:
       - inception-network
     depends_on:
@@ -168,12 +170,13 @@ services:
     restart: unless-stopped
   
   node-exporter:
-    image: prom/node-exporter
     container_name: node-exporter
+    build:
+      context: ./requirements/bonus/node_exporter
+      dockerfile: Dockerfile
+    init: true
     networks:
       - inception-network
-    expose:
-      - "9100"
     restart: unless-stopped
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.

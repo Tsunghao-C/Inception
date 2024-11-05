@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get install -y curl gnupg && \
+    apt-get install -y curl gnupg bash && \
     curl https://packages.grafana.com/gpg.key | apt-key add - && \
     echo "deb https://packages.grafana.com/oss/deb stable main" > etc/apt/sources.list.d/grafana.list && \
     apt-get update && \
@@ -21,6 +21,5 @@ RUN chmod +x /startup.sh
 EXPOSE 3000
 
 ENTRYPOINT [ "/startup.sh" ]
-# ENTRYPOINT [ "/usr/sbin/grafana-server", "--homepath=/usr/share/grafana" ]
 
 CMD [ "grafana-server", "--homepath=/usr/share/grafana", "--config=/grafana.ini" ]
