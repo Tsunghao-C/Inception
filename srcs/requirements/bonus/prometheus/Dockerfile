@@ -7,7 +7,7 @@ RUN apt-get update && \
 # Download Prometheus
 RUN curl -LO https://github.com/prometheus/prometheus/releases/download/v2.32.1/prometheus-2.32.1.linux-amd64.tar.gz && \
     tar xvf prometheus-2.32.1.linux-amd64.tar.gz && \
-    mv prometheus-2.32.1.linux-amd64 /prometheus && \
+    mv prometheus-2.32.1.linux-amd64/* /prometheus && \
     rm prometheus-2.32.1.linux-amd64.tar.gz
 
 # Copy configuration file
@@ -17,4 +17,4 @@ EXPOSE 9090
 
 WORKDIR /prometheus
 
-ENTRYPOINT [ "/prometheus/prometheus", "--config.file=/prometheus/prometheus.yml" ]
+ENTRYPOINT [ "prometheus", "--config.file=/prometheus/prometheus.yml" ]

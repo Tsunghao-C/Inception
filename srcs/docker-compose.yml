@@ -15,12 +15,12 @@ volumes:
       type: none
       device: ${HOME}/data/mariadb_data
       o: bind
-  # monitoring_data:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: ${HOME}/data/monitoring_data
-  #     o: bind
+  monitoring_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/data/monitoring_data
+      o: bind
 
 services:
   nginx:
@@ -146,10 +146,13 @@ services:
     depends_on:
       - mariadb
       - redis
+    ports:
+      - 9090:9090
     env_file:
       - .env
-    # volumes:
-    #   - monitoring_data_data:/var/www/html/prometheus
+    volumes:
+      # - ./prometheus:/etc/prometheus
+      - monitoring_data_data/prometheus:/prometheus
     pull_policy: never
     restart: unless-stopped
 
@@ -162,12 +165,35 @@ services:
       - inception-network
     depends_on:
       - prometheus
+    ports:
+      - 3000:3000
     env_file:
       - .env
-    # volumes:
-    #   - monitoring_data:/var/www/html/grafana
+    volumes:
+      - monitoring_data/grafana:/var/lib/grafana
     pull_policy: never
     restart: unless-stopped
+  
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    networks:
+      - inception-network
+    expose:
+      - "9100"
+  
+  cadvisor:
+    image: google/cadvisor
+    container_name: cadvisor
+    networks:
+      - inception
+    expose:
+      - "8081"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
 
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
