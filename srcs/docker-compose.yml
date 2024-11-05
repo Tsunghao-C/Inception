@@ -162,8 +162,6 @@ services:
       - inception-network
     depends_on:
       - prometheus
-    ports:
-      - 3000:3000
     env_file:
       - .env
     pull_policy: never
