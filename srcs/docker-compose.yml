@@ -15,11 +15,17 @@ volumes:
       type: none
       device: ${HOME}/data/mariadb_data
       o: bind
-  monitoring_data:
+  prometheus_data:
     driver: local
     driver_opts:
       type: none
-      device: ${HOME}/data/monitoring_data
+      device: ${HOME}/data/monitoring_data/prometheus
+      o: bind
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/data/monitoring_data/grafana
       o: bind
 
 services:
@@ -152,7 +158,7 @@ services:
       - .env
     volumes:
       # - ./prometheus:/etc/prometheus
-      - monitoring_data_data/prometheus:/prometheus
+      - prometheus_data:/prometheus
     pull_policy: never
     restart: unless-stopped
 
@@ -170,7 +176,7 @@ services:
     env_file:
       - .env
     volumes:
-      - monitoring_data/grafana:/var/lib/grafana
+      - grafana_data:/var/lib/grafana
     pull_policy: never
     restart: unless-stopped
   
@@ -181,19 +187,25 @@ services:
       - inception-network
     expose:
       - "9100"
+    restart: unless-stopped
   
-  cadvisor:
-    image: google/cadvisor
-    container_name: cadvisor
-    networks:
-      - inception
-    expose:
-      - "8081"
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+  # cadvisor:
+  #   image: google/cadvisor:latest 
+  #   container_name: cadvisor
+  #   networks:
+  #     - inception-network
+  #   ports:
+  #     - 8081:8081
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:ro
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   security_opt:
+  #     - lable:disable
+  #     - apparmor=unconfined
+  #   restart: unless-stopped
 
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
