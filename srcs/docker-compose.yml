@@ -7,14 +7,20 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/tsuchen/data/wordpress_data
+      device: ${HOME}/data/wordpress_data
       o: bind
   mariadb_data:
     driver: local
     driver_opts:
       type: none
-      device: /home/tsuchen/data/mariadb_data
+      device: ${HOME}/data/mariadb_data
       o: bind
+  # monitoring_data:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: ${HOME}/data/monitoring_data
+  #     o: bind
 
 services:
   nginx:
@@ -32,6 +38,9 @@ services:
     depends_on:
       - wordpress
       - static-website
+      - adminer
+      - prometheus
+      - grafana
     pull_policy: never
     restart: unless-stopped
 
@@ -125,6 +134,39 @@ services:
     pull_policy: never
     volumes:
       - wordpress_data:/var/www/html
+    restart: unless-stopped
+  
+  prometheus:
+    container_name: prometheus
+    build:
+      context: ./requirements/bonus/prometheus
+      dockerfile: Dockerfile
+    networks:
+      - inception-network
+    depends_on:
+      - mariadb
+      - redis
+    env_file:
+      - .env
+    # volumes:
+    #   - monitoring_data_data:/var/www/html/prometheus
+    pull_policy: never
+    restart: unless-stopped
+
+  grafana:
+    container_name: grafana
+    build:
+      context: ./requirements/bonus/grafana
+      dockerfile: Dockerfile
+    networks:
+      - inception-network
+    depends_on:
+      - prometheus
+    env_file:
+      - .env
+    # volumes:
+    #   - monitoring_data:/var/www/html/grafana
+    pull_policy: never
     restart: unless-stopped
 
   

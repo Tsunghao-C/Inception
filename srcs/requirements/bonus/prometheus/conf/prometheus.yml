@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+
+# Scrape configs
+scrape_configs:
+  # Scrape Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Scrape MariaDB via MySQL exporter
+  - job_name: 'mariadb'
+    static_configs:
+      - targets: ['mariadb-exporter:9104']
+  
+  # Scrape Nginx or PHP metrics for WordPress
+  - job_name: 'wordpress-nginx'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+
+
