@@ -4,7 +4,6 @@ up :
 	mkdir -p ${HOME}/data/mariadb_data
 	mkdir -p ${HOME}/data/wordpress_data
 	mkdir -p ${HOME}/data/monitoring_data/prometheus
-	mkdir -p ${HOME}/data/monitoring_data/grafana
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
 down:

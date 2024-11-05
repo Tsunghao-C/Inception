@@ -8,6 +8,19 @@ RUN apt-get update && \
     apt-get install -y grafana && \
     rm -rf /var/lib/apt/lists/*
 
+COPY grafana.ini /grafana.ini
+
+RUN cp -r /usr/share/grafana/conf/provisioning /provisioning
+
+COPY provisioning /provisioning
+
+COPY startup.sh /startup.sh
+
+RUN chmod +x /startup.sh
+
 EXPOSE 3000
 
-ENTRYPOINT [ "/usr/sbin/grafana-server", "--homepath=/usr/share/grafana" ]
+ENTRYPOINT [ "/startup.sh" ]
+# ENTRYPOINT [ "/usr/sbin/grafana-server", "--homepath=/usr/share/grafana" ]
+
+CMD [ "grafana-server", "--homepath=/usr/share/grafana", "--config=/grafana.ini" ]

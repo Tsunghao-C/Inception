@@ -21,12 +21,6 @@ volumes:
       type: none
       device: ${HOME}/data/monitoring_data/prometheus
       o: bind
-  grafana_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${HOME}/data/monitoring_data/grafana
-      o: bind
 
 services:
   nginx:
@@ -155,7 +149,6 @@ services:
     env_file:
       - .env
     volumes:
-      # - ./prometheus:/etc/prometheus
       - prometheus_data:/prometheus
     pull_policy: never
     restart: unless-stopped
@@ -173,8 +166,6 @@ services:
       - 3000:3000
     env_file:
       - .env
-    volumes:
-      - grafana_data:/var/lib/grafana
     pull_policy: never
     restart: unless-stopped
   
