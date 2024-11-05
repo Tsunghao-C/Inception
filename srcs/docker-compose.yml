@@ -152,8 +152,6 @@ services:
     depends_on:
       - mariadb
       - redis
-    ports:
-      - 9090:9090
     env_file:
       - .env
     volumes:
@@ -188,25 +186,6 @@ services:
     expose:
       - "9100"
     restart: unless-stopped
-  
-  # cadvisor:
-  #   image: google/cadvisor:latest 
-  #   container_name: cadvisor
-  #   networks:
-  #     - inception-network
-  #   ports:
-  #     - 8081:8081
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:ro
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   security_opt:
-  #     - lable:disable
-  #     - apparmor=unconfined
-  #   restart: unless-stopped
-
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
 ## since the services used in this project don't spawn children processes and even has process management capability, we don't need to add init:true here.
