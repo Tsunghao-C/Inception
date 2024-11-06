@@ -10,7 +10,12 @@ fi
 # Start MariaDB in the background
 
 mysqld_safe --datadir=/var/lib/mysql &
-sleep 5 # Wait for MariaDB to start
+# sleep 5 # Wait for MariaDB to start
+
+until mysqladmin ping -uroot -p"${MYSQL_ROOT_PASSWORD}" --silent; do
+	echo "Waiting for MariaDB to be ready..."
+	sleep 5
+done
 
 # Check if database exists
 

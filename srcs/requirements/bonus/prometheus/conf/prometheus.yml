@@ -29,9 +29,9 @@ scrape_configs:
     static_configs:
       - targets: ['node-exporter:9100']
   
-  # # Scrape docker networks via Container Advisor
+  # Scrape docker networks via Container Advisor
   # - job_name: 'cadvisor'
   #   static_configs:
-  #     - targets: ['cadvisor:8081']
+  #     - targets: ['cadvisor:8080']
 
 

@@ -11,13 +11,9 @@ RUN	mkdir -p /var/run/mysqld && \
 
 EXPOSE	3306
 
-# RUN	sed -i '/^bind-address/c\bind-address = 0.0.0.0' /etc/mysql/mariadb.conf.d/50-server.cnf
-
 COPY	./tools/startup.sh /usr/local/bin/
-COPY	./conf/wordpress.sql /usr/local/bin/
 
 RUN	chmod +x /usr/local/bin/startup.sh
-RUN chmod +x /usr/local/bin/wordpress.sql
 
 ENTRYPOINT	["/usr/local/bin/startup.sh"]
 

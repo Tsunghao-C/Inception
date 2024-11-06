@@ -3,9 +3,19 @@ apiVersion: 1
 providers:
   - name: "Node_Exporter_Full"
     orgId: 1
-    folder: ""
+    folder: "Node Exporter"
     type: file
     disableDeletion: false
     editable: true
     options:
-      path: /provisioning/dashboards/node-exporter-full
+      path: /usr/share/grafana/provisioning/dashboards/node-exporter-full
+
+  # - name: "Container Monitor"
+  #   orgId: 1
+  #   folder: "Container Monitor"
+  #   type: file
+  #   disableDeletion: false
+  #   editable: true
+  #   options:
+  #     path: /usr/share/grafana/provisioning/dashboards/cadvisor
+  #     # datasource: Prometheus

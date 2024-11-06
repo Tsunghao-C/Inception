@@ -5,14 +5,14 @@ RUN	apt-get update -y && apt-get upgrade -y && \
 		wget \
 		curl \
 		bash \
-		php \
+		php7.4 \
 		php-cgi \
-		php-mysql \
-		php-fpm \
-		php-pdo \
-		php-gd \
-		php-cli \
-		php-mbstring \
+		php7.4-mysql \
+		php7.4-fpm \
+		php7.4-pdo \
+		php7.4-gd \
+		php7.4-cli \
+		php7.4-mbstring \
 		redis \
 		php-redis \
 		default-mysql-client
@@ -36,13 +36,14 @@ RUN	chmod +x /usr/local/bin/startup.sh
 
 ENTRYPOINT	["/usr/local/bin/startup.sh"]
 
-# RUN	mkdir -p /var/www/html/wordpress && \
-# 	chmod -R 777 /var/www/html/wordpress && \
-# 	chown -R www-data:www-data /var/www/html/wordpress
+RUN	mkdir -p /var/www/html && \
+	chmod -R 777 /var/www/html && \
+	chown -R www-data:www-data /var/www/html
 
 WORKDIR	/var/www/html/
 
 EXPOSE	9000
 
 # Launch PHP FPM in foreground and ignore daemonize from conf file (-F)
-CMD	["/usr/sbin/php-fpm7.4", "-F"]
+CMD	["php-fpm7.4", "-F"]
+# CMD	["/usr/sbin/php-fpm7.4", "-F"]

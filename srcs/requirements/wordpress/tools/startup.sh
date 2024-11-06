@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Check if wp-config.php exists
-if [ -f ./wp-config.php ]
-then
-	echo "wordpress already downloaded"
-else
+# if [ -f ./wp-config.php ]
+# then
+# 	echo "wordpress already downloaded"
+# else
 
+if [ ! -f ./wp-config.php ]; then
 ######### MANDATORY PART ##############
 	
 	## for debugging
@@ -20,11 +21,11 @@ else
 	## for debugging
 	echo "Configuring wp-config.php with environment variables..."
 	# Import env variables in the config file
-	sed -i "s/username_here/$MYSQL_USER/g" wp-config-sample.php
-	sed -i "s/password_here/$MYSQL_PASSWORD/g" wp-config-sample.php
-	sed -i "s/localhost/$MYSQL_HOSTNAME/g" wp-config-sample.php
-	sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config-sample.php
 	cp wp-config-sample.php wp-config.php
+	sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config.php
+	sed -i "s/username_here/$MYSQL_USER/g" wp-config.php
+	sed -i "s/password_here/$MYSQL_PASSWORD/g" wp-config.php
+	sed -i "s/localhost/$MYSQL_HOSTNAME/g" wp-config.php
 
 	## for debugging
 	echo "WordPress setup completed."
@@ -39,14 +40,17 @@ wp config set WP_CACHE true --raw --allow-root
 
 wp config set WP_DEBUG true --raw --allow-root
 
+wp config set WP_DEBUG_LOG true --raw --allow-root
+
 wp config set WP_REDIS_HOST redis --allow-root
 
 wp config set WP_REDIS_PORT 6379 --allow-root
 
 
 # Wait until mariadb is set
+echo "Waiting for the database to be ready..."
 until wp db check --allow-root; do
-	echo "Waiting for database..."
+	echo "Waiting for database connection..."
 	sleep 3
 done
 

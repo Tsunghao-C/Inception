@@ -76,6 +76,11 @@ services:
       - mariadb_data:/var/lib/mysql
     pull_policy: never
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
   
   redis:
     container_name: redis
@@ -145,8 +150,7 @@ services:
     networks:
       - inception-network
     depends_on:
-      - mariadb
-      - redis
+      - node-exporter
     env_file:
       - .env
     volumes:
@@ -166,6 +170,8 @@ services:
       - prometheus
     env_file:
       - .env
+    volumes:
+      - ./requirements/bonus/grafana/provisioning:/usr/share/grafana/provisioning
     pull_policy: never
     restart: unless-stopped
   
@@ -178,6 +184,23 @@ services:
     networks:
       - inception-network
     restart: unless-stopped
+
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:v0.47.2
+  #   container_name: cadvisor
+  #   # build:
+  #   #   context: ./requirements/bonus/cadvisor
+  #   #   dockerfile: Dockerfile
+  #   init: true
+  #   networks:
+  #     - inception-network
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:ro
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #     - /dev/disk/:/dev/disk:ro
+  #   restart: unless-stopped
   
 ## init: true will create a docker/init service as PID 1 to proper reaping zombie processes and forwarding signals.
 ## since the services used in this project don't spawn children processes and even has process management capability, we don't need to add init:true here.

@@ -18,7 +18,8 @@ start:
 status:
 	@docker compose -f ./srcs/docker-compose.yml ps
 
-clean: down
+clean:
+	docker compose -f ./srcs/docker-compose.yml down -v
 	sudo rm -rf ${HOME}/data/mariadb_data
 	sudo rm -rf ${HOME}/data/wordpress_data
 	sudo rm -rf ${HOME}/data/monitoring_data
